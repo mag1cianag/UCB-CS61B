@@ -85,7 +85,7 @@ public class IntList {
             return B;
         }
         IntList p = A;
-        // find p
+        /* find p */
         while (p.rest != null) {
             p = p.rest;
         }
@@ -108,8 +108,30 @@ public class IntList {
             A = A.rest;
             p = p.rest;
         }
-        p.rest =B;
+        p.rest = B;
         return copy;
+    }
+
+    /**
+     * return a reversed IntList
+     * destructive
+     *
+     * @param A IntList
+     * @return IntList
+     */
+    public static IntList reverse(IntList A) {
+        if (A == null) {
+            return null;
+        }
+        IntList p = A;
+        IntList pre = null;
+        while (p != null) {
+            IntList tmp = p.rest;
+            p.rest = pre;
+            pre = p;
+            p = tmp;
+        }
+        return pre;
     }
 
 
@@ -211,9 +233,11 @@ public class IntList {
         }
     }
 
+    /**
+     * Outputs the IntList as a String. You are not expected to read
+     * or understand this method.
+     */
     @Override
-    /** Outputs the IntList as a String. You are not expected to read
-     * or understand this method. */
     public String toString() {
         Formatter out = new Formatter();
         String sep;
