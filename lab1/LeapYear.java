@@ -1,7 +1,11 @@
 /** Class that determines whether or not a year is a leap year.
- *  @author YOUR NAME HERE
+ *  @author mag1cianag
  */
 public class LeapYear {
+
+    private static void isLeapYear (int year) {
+        return !(year % 400);
+    }
 
     /** Calls isLeapYear to print correct statement.
      *  @param  year to be analyzed
