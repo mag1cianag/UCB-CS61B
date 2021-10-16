@@ -1,4 +1,4 @@
-public class LinkedListDeque<T> implements Deque<T> {
+public class LinkedListDeque<T> {
     private final Node<T> head;
     private int size;
 
@@ -8,7 +8,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         head.prev = head;
     }
 
-    @Override
     public void addFirst(T item) {
         Node<T> node = new Node<>(item);
         node.next = head.next;
@@ -18,7 +17,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         size++;
     }
 
-    @Override
     public void addLast(T item) {
         Node<T> last = head.prev;
         Node<T> node = new Node<>(item);
@@ -29,17 +27,14 @@ public class LinkedListDeque<T> implements Deque<T> {
         size++;
     }
 
-    @Override
     public boolean isEmpty() {
         return size == 0;
     }
 
-    @Override
     public int size() {
         return size;
     }
 
-    @Override
     public void printDeque() {
         Node<T> work = head.next;
         for (int i = 0; i < size; i++) {
@@ -49,7 +44,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         System.out.println();
     }
 
-    @Override
     public T removeFirst() {
         if (size == 0) {
             return null;
@@ -61,7 +55,6 @@ public class LinkedListDeque<T> implements Deque<T> {
         return d.ele;
     }
 
-    @Override
     public T removeLast() {
         if (size == 0) {
             return null;
@@ -73,18 +66,30 @@ public class LinkedListDeque<T> implements Deque<T> {
         return last.ele;
     }
 
-    @Override
     public T get(int index) {
         if (index >= size) {
             return null;
         }
         Node<T> work = head.next;
-        for (int i = 0; i <= index; i++) {
+        for (int i = 0; i < index; i++) {
             work = work.next;
         }
         return work.ele;
     }
 
+    public T getRecursive(int index) {
+        if (index >= size) {
+            return null;
+        }
+        return getHelp(head.next, index).ele;
+    }
+
+    private Node<T> getHelp(Node<T> h, int index) {
+        if (index == 0) {
+            return h;
+        }
+        return getHelp(h.next, index - 1);
+    }
 
     private static class Node<T> {
         private final T ele;

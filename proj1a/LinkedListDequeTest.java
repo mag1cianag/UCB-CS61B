@@ -80,6 +80,9 @@ public class LinkedListDequeTest {
 		lld1.addFirst(10);
 		lld1.addFirst(20);
 		lld1.addLast(30);
+		lld1.printDeque();
+		System.out.println(lld1.get(2));
+		System.out.println(lld1.getRecursive(2));
 		lld1.removeFirst();
 		lld1.removeLast();
 		Integer x1 = lld1.removeLast();
