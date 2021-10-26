@@ -1,5 +1,7 @@
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
 import static org.junit.Assert.*;
 
 /**
@@ -172,9 +174,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
     @Override
     public T peek() {
         if (size == 0) {
-            return null;
+            throw new NoSuchElementException("Empty heap");
         }
-        return contents[1].myItem;
+        return contents[1].item();
     }
 
     /**
@@ -214,20 +216,15 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     @Override
     public void changePriority(T item, double priority) {
-        /* TODO: Your code here! */
         for (int i = 1; i <= size; i++) {
-            if (contents[i].myItem.equals(item)) {
-                double ori = contents[i].myPriority;
+            if (contents[i].item().equals(item)) {
                 contents[i].myPriority = priority;
-                if (priority < ori) {
                     swim(i);
-                } else {
                     sink(i);
-                }
-                break;
+                    return;
             }
         }
-        return;
+        throw new IllegalArgumentException("no such element in heap");
     }
 
     /**
