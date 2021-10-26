@@ -107,21 +107,16 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         // Throws an exception if index is invalid. DON'T CHANGE THIS LINE.
         validateSinkSwimArg(index);
 
-        int p = parentIndex(index);
-        int left = leftIndex(p);
-        int right = rightIndex(p);
-        while (p != 0) {
-            int min = min(index, p);
-            if (min != p) {
-                swap(min, p);
-                index = p;
-                p = parentIndex(index);
-            } else {
-                break;
-            }
+        if (index == 1) {
+            return;
         }
 
 
+        int p = parentIndex(index);
+        if (min(index, p) == index) {
+            swap(index, p);
+            swim(p);
+        }
         return;
     }
 
@@ -130,24 +125,17 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
      */
     private void sink(int index) {
         /* Throws an exception if index is invalid. DON'T CHANGE THIS LINE. */
+        if (!inBounds(index)) {
+            return;
+        }
+
         validateSinkSwimArg(index);
 
-
-        int left = leftIndex(index);
-        int right = rightIndex(index);
-        while (left <= size) {
-            int min = min(left, right);
-            min = min(min, index);
-            if (min != index) {
-                swap(min, index);
-                index = min;
-                left = leftIndex(index);
-                right = rightIndex(index);
-            } else {
-                break;
-            }
+        int child = min(leftIndex(index), rightIndex(index));
+        if (min(index,child) == child) {
+            swap(index,child);
+            sink(child);
         }
-        return;
     }
 
     /**
@@ -194,6 +182,7 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         swap(1, size);
         size -= 1;
         sink(1);
+        contents[size+1] = null;
         return ret;
     }
 
@@ -219,9 +208,9 @@ public class ArrayHeap<T> implements ExtrinsicPQ<T> {
         for (int i = 1; i <= size; i++) {
             if (contents[i].item().equals(item)) {
                 contents[i].myPriority = priority;
-                    swim(i);
-                    sink(i);
-                    return;
+                swim(i);
+                sink(i);
+                return;
             }
         }
         throw new IllegalArgumentException("no such element in heap");
