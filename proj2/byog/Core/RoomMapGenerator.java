@@ -1,30 +1,29 @@
 package byog.Core;
-
 import byog.TileEngine.TERenderer;
 import byog.TileEngine.TETile;
 import byog.TileEngine.Tileset;
-import edu.princeton.cs.algs4.In;
-import edu.princeton.cs.introcs.StdDraw;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class RoomMapGenerator implements MapGenerator {
     private int width;
     private int height;
-    private final int MAX_ROOMS = 23;
+    private final int MAX_ROOMS = 30;
     private final int MAX_SIZE = 10;
     private final int MIN_SIZE = 6;
 
     private final long SEED = 28880;
 
-    private Random rng = new Random(SEED);
+    private Random rng = new Random();
 
     // only for debug
     private TERenderer engine = null;
 
     public RoomMapGenerator() {
+    }
+
+    public RoomMapGenerator(TERenderer engine) {
+        this.engine = engine;
     }
 
     private void init(TETile[][] tiles) {
@@ -73,8 +72,10 @@ public class RoomMapGenerator implements MapGenerator {
             }
             rooms.add(newRoom);
         }
+        clean(tiles);
     }
 
+    // todo fixbugs
     private void applyRoom(Room r, TETile[][] tiles) {
 /*
         for (int i = r.leftBottom.getX(); i <= r.rightTop.getX(); i++) {
@@ -86,11 +87,12 @@ public class RoomMapGenerator implements MapGenerator {
             tiles[r.rightTop.getX()][i] = Tileset.WALL;
         }
 */
-        for (int j = r.leftBottom.getY() + 1; j < r.rightTop.getY(); j++) {
-            for (int i = r.leftBottom.getX() + 1; i < r.rightTop.getX(); i++) {
+        for (int j = r.leftBottom.getY(); j <= r.rightTop.getY(); j++) {
+            for (int i = r.leftBottom.getX(); i <= r.rightTop.getX(); i++) {
                 tiles[i][j] = Tileset.FLOOR;
             }
         }
+        //  engine.renderFrame(tiles);
     }
 
     private void applyHorizontalTunnel(TETile[][] tiles, int x1, int x2, int y) {
@@ -100,6 +102,7 @@ public class RoomMapGenerator implements MapGenerator {
             // may  test if valid
             tiles[i][y] = Tileset.FLOOR;
         }
+        //   engine.renderFrame(tiles);
     }
 
     private void applyVerticalTunnel(TETile[][] tiles, int y1, int y2, int x) {
@@ -108,9 +111,40 @@ public class RoomMapGenerator implements MapGenerator {
         for (int i = startY; i <= endY; i++) {
             tiles[x][i] = Tileset.FLOOR;
         }
+        //    engine.renderFrame(tiles);
     }
 
-    public static void main(String[] args) {
+    private void clean(TETile[][] tiles) {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                if (!aroundFloor(j, i,tiles)) {
+                   tiles[j][i] = Tileset.NOTHING;
+                }
+            }
+        }
+    }
 
+    private boolean aroundFloor(int x, int y, TETile[][] tiles) {
+        return isFloor(x - 1, y, tiles)
+                || isFloor(x + 1, y, tiles)
+                || isFloor(x, y - 1, tiles)
+                || isFloor(x, y + 1, tiles);
+    }
+
+    private boolean isFloor(int x, int y, TETile[][] tiles) {
+        x = Integer.max(0, x);
+        x = Integer.min(x, width-1);
+        y = Integer.max(0, y);
+        y = Integer.min(y, height-1);
+        return tiles[x][y].equals(Tileset.FLOOR);
+    }
+
+
+    public static void main(String[] args) {
+        TETile[][] tiles = new TETile[100][60];
+        TERenderer eng = new TERenderer();
+        eng.initialize(100, 60);
+        MapGenerator gen = new RoomMapGenerator(eng);
+        gen.mapGen(tiles);
     }
 }
