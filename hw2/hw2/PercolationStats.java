@@ -3,20 +3,20 @@ package hw2;
 import edu.princeton.cs.algs4.StdRandom;
 
 import java.util.ArrayList;
-import java.util.jar.JarException;
 
 public class PercolationStats {
-    private ArrayList<Integer> list;
+    private ArrayList<Double> list;
     private int times;
 
     /**
      * perform T independent experiments on an N-by-N grid
      */
     public PercolationStats(int N, int T, PercolationFactory pf) {
-        if(N<=0 || T<= 0 ) {
+        if (N <= 0 || T <= 0) {
             throw new java.lang.IllegalArgumentException("IllegalArguments");
         }
         times = T;
+        double total = N*N;
         list = new ArrayList<>();
         for (int i = 0; i < T; i++) {
             Percolation p = pf.make(N);
@@ -25,7 +25,7 @@ public class PercolationStats {
                 int col = StdRandom.uniform(0, N);
                 p.open(row, col);
             }
-            list.add(p.numberOfOpenSites());
+            list.add(p.numberOfOpenSites()/total);
         }
     }
 
@@ -34,7 +34,7 @@ public class PercolationStats {
      */
     public double mean() {
         double sum = 0;
-        for (Integer val : list) {
+        for (Double val : list) {
             sum += val;
         }
         return sum / times;
@@ -46,23 +46,23 @@ public class PercolationStats {
     public double stddev() {
         double m = this.mean();
         double sum = 0.0;
-        for (Integer val:list) {
-            sum += (val - m) * (val -m);
+        for (Double val : list) {
+            sum += (val - m) * (val - m);
         }
-        return Math.sqrt(sum /(times-1));
+        return Math.sqrt(sum / (times - 1));
     }
 
     /**
      * @return low endpoint of 95% confidence interval
      */
     public double confidenceLow() {
-        return mean()-1.96*stddev()/Math.sqrt(times);
+        return mean() - 1.96 * stddev() / Math.sqrt(times);
     }
 
     /**
      * @return high endpoint of 95% confidence interval
      */
     public double confidenceHigh() {
-        return mean()+1.96*stddev()/Math.sqrt(times);
+        return mean() + 1.96 * stddev() / Math.sqrt(times);
     }
 }
