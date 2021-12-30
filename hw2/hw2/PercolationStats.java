@@ -16,7 +16,7 @@ public class PercolationStats {
             throw new java.lang.IllegalArgumentException("IllegalArguments");
         }
         times = T;
-        double total = N*N;
+        double total = N * N;
         list = new ArrayList<>();
         for (int i = 0; i < T; i++) {
             Percolation p = pf.make(N);
@@ -25,7 +25,7 @@ public class PercolationStats {
                 int col = StdRandom.uniform(0, N);
                 p.open(row, col);
             }
-            list.add(p.numberOfOpenSites()/total);
+            list.add(p.numberOfOpenSites() / total);
         }
     }
 

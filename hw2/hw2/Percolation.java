@@ -93,6 +93,9 @@ public class Percolation {
      * @return does the system precolate?
      */
     public boolean percolates() {
+        if (n == 1) {
+            return isOpen(0, 0);
+        }
         return wquf.connected(top, bottom);
     }
 
