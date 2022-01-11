@@ -120,6 +120,9 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     public V remove(K key) {
         V v = get(key);
         root = delete(key, root);
+        if (v != null) {
+            this.size -= 1;
+        }
         return v;
     }
 
@@ -129,16 +132,17 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
         }
         int c = key.compareTo(node.key);
         if (c == 0) {
-            if (node.right != null) {
-                Node max = findMax(node);
-                max.right = node.right;
-                max.left = node.left;
+
+            if (node.left != null) {
+                Node max = findMax(node.left);
+                max.right = node.left.right;
+                max.left = node.left.left;
                 return max;
             }
-            if (node.left != null) {
-                Node min = findMin(node);
-                min.right = node.right;
-                min.left = node.left;
+            if (node.right != null) {
+                Node min = findMin(node.right);
+                min.right = node.right.right;
+                min.left = node.right.left;
                 return min;
             }
             return null;
@@ -207,11 +211,11 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     }
 
     public static void main(String[] args) {
-        Map61B<String, String> map = new BSTMap<>();
+        Map61B<Integer, String> map = new BSTMap<>();
 //        for (int i = 0; i < 10; i++) {
 //            map.put("hi" + i, String.valueOf(i));
 //        }
-        map.put("hi","1");
-        map.remove("hi");
+        map.remove(1);
+        System.out.println("x");
     }
 }

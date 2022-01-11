@@ -105,7 +105,11 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * UnsupportedOperationException. */
     @Override
     public V remove(K key) {
-        return buckets[hash(key)].remove(key);
+        V remove = buckets[hash(key)].remove(key);
+        if (remove !=null) {
+            this.size -= 1;
+        }
+        return remove;
     }
 
     /* Removes the entry for the specified key only if it is currently mapped to
