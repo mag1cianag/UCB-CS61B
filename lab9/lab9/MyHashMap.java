@@ -62,18 +62,20 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     /* Associates the specified value with the specified key in this map. */
     @Override
     public void put(K key, V value) {
-        if(loadFactor() > MAX_LF) {
+        if (loadFactor() > MAX_LF) {
             resize();
         }
-        putHelper(key,value);
+        putHelper(key, value);
     }
-    private void putHelper(K key,V value){
+
+    private void putHelper(K key, V value) {
         int hashcode = hash(key);
-        if(!this.buckets[hashcode].containsKey(key)){
-            size+=1;
+        if (!this.buckets[hashcode].containsKey(key)) {
+            size += 1;
         }
-        this.buckets[hashcode].put(key,value);
+        this.buckets[hashcode].put(key, value);
     }
+
     /* Returns the number of key-value mappings in this map. */
     @Override
     public int size() {
@@ -81,12 +83,12 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
     }
 
     private void resize() {
-        ArrayMap<K,V> [] oldBuckets = this.buckets;
-        this.buckets = new ArrayMap[oldBuckets.length*2];
+        ArrayMap<K, V>[] oldBuckets = this.buckets;
+        this.buckets = new ArrayMap[oldBuckets.length * 2];
         this.clear();
-        for (int i = 0; i < oldBuckets.length ; i++) {
+        for (int i = 0; i < oldBuckets.length; i++) {
             for (K k : oldBuckets[i].keySet()) {
-                putHelper(k,oldBuckets[i].get(k));
+                putHelper(k, oldBuckets[i].get(k));
             }
         }
     }
@@ -103,7 +105,7 @@ public class MyHashMap<K, V> implements Map61B<K, V> {
      * UnsupportedOperationException. */
     @Override
     public V remove(K key) {
-        throw new UnsupportedOperationException();
+        return buckets[hash(key)].remove(key);
     }
 
     /* Removes the entry for the specified key only if it is currently mapped to
