@@ -119,9 +119,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     @Override
     public V remove(K key) {
         V v = get(key);
-        if (v != null) {
-            root = delete(key, root);
-        }
+        root = delete(key, root);
         return v;
     }
 
@@ -210,8 +208,10 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     public static void main(String[] args) {
         Map61B<String, String> map = new BSTMap<>();
-        for (int i = 0; i < 10; i++) {
-            map.put("hi" + i, String.valueOf(i));
-        }
+//        for (int i = 0; i < 10; i++) {
+//            map.put("hi" + i, String.valueOf(i));
+//        }
+        map.put("hi","1");
+        map.remove("hi");
     }
 }
