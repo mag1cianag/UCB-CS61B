@@ -1,5 +1,6 @@
 package lab9;
 
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -108,7 +109,19 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     /* Returns a Set view of the keys contained in this map. */
     @Override
     public Set<K> keySet() {
-        throw new UnsupportedOperationException();
+        HashSet<K> keys = new HashSet<>();
+        add(root, keys);
+        return keys;
+    }
+
+
+    private void add(Node p, Set<K> keys) {
+        if (p == null) {
+            return;
+        }
+        keys.add(p.key);
+        add(p.left, keys);
+        add(p.right, keys);
     }
 
     /**
@@ -119,81 +132,51 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
     @Override
     public V remove(K key) {
         V v = get(key);
-        root = delete(key, root);
-        if (v != null) {
-            this.size -= 1;
+        if (v == null) {
+            return null;
         }
+        root = remove(key, root);
+        this.size -= 1;
         return v;
     }
 
-    private Node delete(K key, Node node) {
-        if (node == null) {
-            return null;
+    /**
+     * traverse left
+     *
+     * @param p subtree
+     * @return min node
+     */
+    private Node min(Node p) {
+        if (p.left == null) {
+            return p;
         }
-        int c = key.compareTo(node.key);
-        if (c == 0) {
-
-            if (node.left != null) {
-                Node max = findMax(node.left);
-                max.right = node.left.right;
-                max.left = node.left.left;
-                return max;
-            }
-            if (node.right != null) {
-                Node min = findMin(node.right);
-                min.right = node.right.right;
-                min.left = node.right.left;
-                return min;
-            }
-            return null;
-        } else if (c < 0) {
-            node.left = delete(key, node.left);
-        } else {
-            node.right = delete(key, node.right);
-        }
-        return node;
+        return min(p.left);
     }
 
-    private Node findMax(Node node) {
-        Node p = node;
-        Node par = null;
-        while (p.right != null) {
-            par = p;
-            p = p.right;
-        }
-        if (par != null) {
-            par.right = node.left;
+    private Node remove(K key, Node p) {
+        int c = key.compareTo(p.key);
+        if (c > 0) {
+            p.right = remove(key, p.right);
+        } else if (c < 0) {
+            p.left = remove(key, p.left);
+        } else {
+            if (p.left == null) return p.right;
+            if (p.right == null) return p.left;
+            Node x = p;
+            p = min(x.right);
+            p.right = removeMin(x.right);
+            p.left = x.left;
         }
         return p;
     }
 
-    private Node findMin(Node node) {
-        Node p = node;
-        Node par = null;
-        while (p.left != null) {
-            par = p;
-            p = p.left;
+    private Node removeMin(Node p) {
+        if (p.left == null) {
+            return p.right;
         }
-        if (par != null) {
-            par.left = node.right;
-        }
+        p.left = removeMin(p.left);
         return p;
     }
-
-    private Node findNode(K key, Node node) {
-        if (node == null) {
-            return null;
-        }
-        int c = key.compareTo(node.key);
-        if (c == 0) {
-            return node;
-        } else if (c < 0) {
-            return findNode(key, node.left);
-        } else {
-            return findNode(key, node.right);
-        }
-    }
-
 
     /**
      * Removes the key-value entry for the specified key only if it is
@@ -207,7 +190,7 @@ public class BSTMap<K extends Comparable<K>, V> implements Map61B<K, V> {
 
     @Override
     public Iterator<K> iterator() {
-        throw new UnsupportedOperationException();
+        return keySet().iterator();
     }
 
     public static void main(String[] args) {
